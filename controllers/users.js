@@ -1,5 +1,6 @@
 const { pool } = require("../config");
 const router = require("express").Router();
+const bcrypt = require("bcrypt");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -14,6 +15,28 @@ router.get("/", async (req, res, next) => {
     return res.status(200).json({
       status: 200,
       message: "All users",
+      data: data.rows,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/", async (req, res, next) => {
+  const { username, name, password } = req.body;
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(password, saltRounds);
+
+  const query =
+    "INSERT INTO users(username, password, name) VALUES($1, $2, $3) RETURNING *;";
+  const values = [username, passwordHash, name];
+
+  try {
+    const data = await pool.query(query, values);
+
+    return res.status(201).json({
+      status: 201,
+      message: "User added successfully",
       data: data.rows,
     });
   } catch (error) {
