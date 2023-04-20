@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const notesRouter = require("./route");
+const notesRouter = require("./controllers/notes");
+const usersRouter = require("./controllers/users");
 
 dotenv.config();
 
@@ -20,4 +21,5 @@ app.listen(port, () => {
   console.log(`Node.js listening on port ${port}`);
 });
 
-app.use("/notes", notesRouter);
+app.use("/api/notes", notesRouter);
+app.use("/api/users", usersRouter);

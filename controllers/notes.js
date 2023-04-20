@@ -1,6 +1,7 @@
-const { pool } = require("./config");
+const { pool } = require("../config");
+const router = require("express").Router();
 
-const getNotes = async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const data = await pool.query("SELECT * from notes");
 
@@ -16,8 +17,6 @@ const getNotes = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-};
+});
 
-module.exports = {
-  getNotes,
-};
+module.exports = router;
