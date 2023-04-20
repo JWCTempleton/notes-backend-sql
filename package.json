@@ -1,0 +1,28 @@
+{
+  "name": "notes-backend-sql",
+  "version": "1.0.0",
+  "description": "A backend for a notes app utilizing Postgresql without an ORM",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JWCTempleton/notes-backend-sql.git"
+  },
+  "author": "JWCTempleton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JWCTempleton/notes-backend-sql/issues"
+  },
+  "homepage": "https://github.com/JWCTempleton/notes-backend-sql#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pg": "^8.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
