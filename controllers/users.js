@@ -7,7 +7,7 @@ router.get("/", async (req, res, next) => {
     const data = await pool.query(
       //   "SELECT id, username, name, admin, disabled from users"
       //   "select u.*, (select json_agg(json_build_object('content',n.content,'important', n.important,'date', n.date)) all_notes) from users u join notes n on u.id=n.user_id where u.id=n.user_id group by u.id;"
-      "select u.*, (select json_agg(note) from (select n.content content, n.important important, n.date date \
+      "select u.id, u.username, u.name, u.admin, u.disabled, (select json_agg(note) from (select n.id id, n.content content, n.important important, n.date date \
         from notes n where u.id=n.user_id) note) as notes from users u;"
     );
 
