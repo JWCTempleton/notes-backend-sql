@@ -92,4 +92,25 @@ router.post("/", tokenExtractor, async (req, res, next) => {
   }
 });
 
+router.delete("/:id", async (req, res, next) => {
+  const id = parseInt(req.params.id);
+  const value = [id];
+  const query = "DELETE FROM notes WHERE id=$1";
+
+  try {
+    const data = await pool.query(query, value);
+
+    if (data.rowCount == 0) {
+      return res.status(404).send("Note does not exist");
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: "Note successfully deleted",
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 module.exports = router;
