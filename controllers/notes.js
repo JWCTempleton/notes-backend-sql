@@ -24,7 +24,7 @@ const tokenExtractor = (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const data = await pool.query(
-      "SELECT n.id, n.content, n.important, n.date, (select json_agg(from_user) FROM (SELECT u.id id, u.username username, u.name name FROM users u where u.id=n.user_id) from_user) as User FROM notes n;"
+      "SELECT n.id, n.content, n.important, n.date, (select json_agg(from_user) FROM (SELECT u.id id, u.username username, u.name name FROM users u where u.id=n.user_id) from_user) as user FROM notes n;"
     );
 
     if (data.rowCount == 0) {
