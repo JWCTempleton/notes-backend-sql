@@ -126,4 +126,32 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
+router.put("/:id", async (req, res, next) => {
+  const id = parseInt(req.params.id);
+  const value = [id];
+  const query = "SELECT * FROM notes WHERE id=$1;";
+
+  try {
+    const data = await pool.query(query, value);
+
+    if (data.rowCount == 0) {
+      return res.status(404).send("Note does not exist");
+    }
+
+    const updateImportant = req.body.important;
+    const importantValue = [updateImportant, id];
+
+    const updateQuery = "UPDATE notes SET important=$1 WHERE id=$2";
+    const updateData = await pool.query(updateQuery, importantValue);
+
+    return res.status(201).json({
+      status: 201,
+      message: "Note updated successfully",
+      data: updateData.rows,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 module.exports = router;
