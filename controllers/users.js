@@ -95,6 +95,46 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.get("/:id", async (req, res, next) => {
+  const id = parseInt(req.params.id);
+  const query =
+    "select u.*, n.* from users u join notes n on u.id=n.user_id where u.id=$1;";
+  const value = [id];
+
+  const returnedValue = [];
+  try {
+    const data = await pool.query(query, value);
+
+    if (data.rowCount == 0) {
+      return res.status(404).send("No user exists");
+    }
+
+    returnedValue.push({
+      id: data.rows[0].user_id,
+      username: data.rows[0].username,
+      name: data.rows[0].name,
+      notes: [],
+    });
+
+    data.rows.map((data) => {
+      returnedValue[0].notes.push({
+        note_id: data.id,
+        content: data.content,
+        date: data.date,
+        important: data.important,
+      });
+    });
+
+    return res.status(200).json({
+      status: 200,
+      message: "User",
+      data: returnedValue,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 router.post("/", async (req, res, next) => {
   const { username, name, password } = req.body;
   const saltRounds = 10;
