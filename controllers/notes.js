@@ -24,17 +24,30 @@ const tokenExtractor = (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const data = await pool.query(
-      "SELECT n.id, n.content, n.important, n.date, (select json_agg(from_user) FROM (SELECT u.id id, u.username username, u.name name FROM users u where u.id=n.user_id) from_user) as user FROM notes n;"
+      // "SELECT n.id, n.content, n.important, n.date, (select json_agg(from_user) FROM (SELECT u.id id, u.username username, u.name name FROM users u where u.id=n.user_id) from_user) as user FROM notes n;"
+      "SELECT n.id note_id, n.content, n.important, n.date, n.user_id, u.* from notes n JOIN users u on u.id=n.user_id;"
     );
 
     if (data.rowCount == 0) {
       return res.status(404).send("No note exists");
     }
 
+    const returnedValue = [];
+
+    data.rows.map((note) => {
+      returnedValue.push({
+        note_id: note.note_id,
+        content: note.content,
+        important: note.important,
+        date: note.date,
+        user: { user_id: note.id, username: note.username, name: note.name },
+      });
+    });
+
     return res.status(200).json({
       status: 200,
       message: "All notes",
-      data: data.rows,
+      data: returnedValue,
     });
   } catch (error) {
     return next(error);
